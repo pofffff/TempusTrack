@@ -8,6 +8,7 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
 public class MainActivity extends ReactActivity {
 
+  // Added because react navigation requires it
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(null);

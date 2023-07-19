@@ -1,94 +1,109 @@
-import { Activity, Category, CreateTimeRecordInput } from '../types'
-import { FormLayout, ScreenLayout } from './_layouts'
+import {
+  Activity,
+  Category,
+  CreateTimeRecordInput,
+  DetailsScreenNavigationProp,
+} from '../types';
+import {
+  DETAILS_SCREEN,
+  USER_ID_KEY,
+  colors,
+  font,
+  fontSize,
+  spacing,
+} from '../variables';
+import { FormLayout, ScreenLayout } from './_layouts';
 import {
   Headline,
   IconButton,
   InputDate,
   InputNumber,
   RegularText,
-  TextButton
-} from './_elements'
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { USER_ID_KEY, colors, font, fontSize, spacing } from '../variables'
-import { memo, useEffect, useState } from 'react'
-import { useSecureStore, useTimeRecord } from '../hooks'
+  TextButton,
+} from './_elements';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { memo, useEffect, useState } from 'react';
+import { useSecureStore, useTimeRecord } from '../hooks';
 
-import { CATEGORY_COLLECTION } from '../services/api'
-import { Icon } from './_icons'
-import { nullFilter } from '../utils'
-import { useAuth } from '../context'
-import { useForm } from 'react-hook-form'
+import { CATEGORY_COLLECTION } from '../services/api';
+import { Icon } from './_icons';
+import { nullFilter } from '../utils';
+import { useAuth } from '../context';
+import { useForm } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
 
 interface CategoryListItemProps {
-  category: Category
+  category: Category;
 }
 
 export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
   ({ category }) => {
-    const [categoryVisible, setCategoryVisible] = useState<boolean>(false)
-    const [activityId, setActivityId] = useState<string | null>()
-    const { getValue } = useSecureStore()
-    const { userId } = useAuth()
-    const [modalVisible, setModalVisible] = useState<boolean>(false)
+    const { navigation } = useNavigation<DetailsScreenNavigationProp>();
+    const { getValue } = useSecureStore();
+    const { userId } = useAuth();
+    const [categoryVisible, setCategoryVisible] = useState<boolean>(false);
+    const [activityId, setActivityId] = useState<string | null>();
+
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const {
       CreateTimeRecordMutation,
       createTimeRecordData,
-      createTimeRecordError
-    } = useTimeRecord()
+      createTimeRecordError,
+    } = useTimeRecord();
 
     const {
       control,
       getFieldState,
       handleSubmit,
-      formState: {}
+      formState: {},
     } = useForm<CreateTimeRecordInput>({
       defaultValues: {
         amount: undefined,
         date: new Date(),
-        activityId: ''
+        activityId: '',
       },
-      mode: 'onChange'
-    })
+      mode: 'onChange',
+    });
 
     const onSubmit = async (data: CreateTimeRecordInput) => {
-      const { amount, date: iDate } = data
-      console.log({ activityId, amount, iDate })
-      if (!amount || !activityId) return
+      const { amount, date: iDate } = data;
+      console.log({ activityId, amount, iDate });
+      if (!amount || !activityId) return;
       // TODO create date in BE instead when done
-      const date = iDate ?? new Date()
+      const date = iDate ?? new Date();
 
       CreateTimeRecordMutation({
         variables: {
           userId: await getValue(USER_ID_KEY),
-          input: { activityId, amount: Number(amount), date }
+          input: { activityId, amount: Number(amount), date },
         },
         refetchQueries: [
           {
             query: CATEGORY_COLLECTION,
-            variables: { userId }
-          }
-        ]
-      })
-    }
+            variables: { userId },
+          },
+        ],
+      });
+    };
 
     useEffect(() => {
       if (createTimeRecordData) {
-        setModalVisible(false)
+        setModalVisible(false);
       }
 
       // TODO fix error handling
       if (createTimeRecordError) {
-        console.error(createTimeRecordError)
+        console.error(createTimeRecordError);
       }
-    }, [createTimeRecordData, createTimeRecordError])
+    }, [createTimeRecordData, createTimeRecordError]);
 
     const handleAddTimeClick = (activityId: string) => {
-      setActivityId(activityId)
-      setModalVisible(true)
-    }
+      setActivityId(activityId);
+      setModalVisible(true);
+    };
     const handleActivityClick = (activityId: string) => {
-      // TODO navigate
-    }
+      navigation.navigate('DetailsScreen', { activityId });
+    };
     return (
       category && (
         <View>
@@ -109,7 +124,7 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
                         transparent={false}
                         visible={modalVisible}
                         onRequestClose={() => {
-                          setModalVisible(false)
+                          setModalVisible(false);
                         }}>
                         <ScreenLayout>
                           <View style={styles.closeIconWrapper}>
@@ -127,7 +142,7 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
                               control={control}
                               getFieldState={getFieldState}
                               rules={{
-                                required: true
+                                required: true,
                               }}
                             />
                             <InputDate
@@ -151,7 +166,7 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
                         <View
                           style={[
                             styles.activityListItem,
-                            activityId === activity.id && styles.activityActive
+                            activityId === activity.id && styles.activityActive,
                           ]}>
                           <RegularText
                             text={activity.name}
@@ -168,14 +183,14 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
                         </View>
                       </TouchableOpacity>
                     </>
-                  )
+                  );
                 })}
           </TouchableOpacity>
         </View>
       )
-    )
-  }
-)
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   categoryListItem: {
@@ -183,7 +198,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.$light,
     borderBottomWidth: 1,
     color: colors.$light,
-    height: 46
+    height: 46,
   },
   categoryName: {
     fontSize: fontSize.$s,
@@ -191,7 +206,7 @@ const styles = StyleSheet.create({
     color: colors.$light,
     paddingHorizontal: spacing.$xs,
     textAlignVertical: 'center',
-    height: 46
+    height: 46,
   },
   activityListItem: {
     borderColor: colors.$black,
@@ -200,25 +215,25 @@ const styles = StyleSheet.create({
     height: 'auto',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.$xs
+    paddingHorizontal: spacing.$xs,
   },
   activityActive: {
-    backgroundColor: colors.$grey
+    backgroundColor: colors.$grey,
   },
   activityName: {
     fontSize: fontSize.$s,
     fontFamily: font.$primary__regular,
     color: colors.$black,
-    padding: spacing.$xs
+    padding: spacing.$xs,
   },
   activityDetails: {
     // flex: 1
-    height: 50
+    height: 50,
   },
   closeIconWrapper: {
-    margin: spacing.$xs
+    margin: spacing.$xs,
   },
   closeIcon: {
-    alignSelf: 'flex-end'
-  }
-})
+    alignSelf: 'flex-end',
+  },
+});

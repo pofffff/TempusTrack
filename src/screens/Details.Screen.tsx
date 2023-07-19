@@ -1,25 +1,26 @@
-import { Headline, TextButton, TimeRecordListItem } from '../components'
-import { StyleSheet, View } from 'react-native'
-import { TimeRecord, TimeRecordCollectionResult } from '../types'
+import {
+  DetailsScreenNavigationProp,
+  TimeRecord,
+  TimeRecordCollectionResult,
+} from '../types';
+import {Headline, TextButton, TimeRecordListItem} from '../components';
+import {StyleSheet, View} from 'react-native';
 
-import { TIME_RECORD_COLLECTION } from '../services/api'
-import { nullFilter } from '../utils'
-import { useAuth } from '../context'
-import { useQuery } from '@apollo/client'
-import { useState } from 'react'
+import {TIME_RECORD_COLLECTION} from '../services/api';
+import {nullFilter} from '../utils';
+import {useAuth} from '../context';
+import {useQuery} from '@apollo/client';
+import {useState} from 'react';
 
-interface DetailsScreenProps {}
+interface DetailsScreenProps extends DetailsScreenNavigationProp {}
 
 export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
-  const { userId } = useAuth()
-  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false)
-  const [editModalVisible, setEditModalVisible] = useState<boolean>(false)
-  const { data } = useQuery<TimeRecordCollectionResult>(
-    TIME_RECORD_COLLECTION,
-    {
-      variables: { userId }
-    }
-  )
+  const {userId} = useAuth();
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const {data} = useQuery<TimeRecordCollectionResult>(TIME_RECORD_COLLECTION, {
+    variables: {userId},
+  });
 
   const onDeleteClick = () => {
     //  const timeReordIds = [timeRecord.id]
@@ -32,12 +33,12 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
     //      }
     //    ]
     //  })
-    setDeleteModalVisible(true)
-  }
+    setDeleteModalVisible(true);
+  };
 
   const onEditClick = () => {
-    setEditModalVisible(true)
-  }
+    setEditModalVisible(true);
+  };
 
   const timeRecords = () => {
     if (data?.timeRecordCollection.timeRecords) {
@@ -49,10 +50,10 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
               timeRecord={timeRecord}
               key={`TimeRecord-${timeRecord.id}`}
             />
-          )
-        })
+          );
+        });
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -65,25 +66,25 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
         <TextButton text={'Delete activity'} onPress={() => onDeleteClick()} />
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   actionsWrapper: {
     flex: 1,
     justifyContent: 'center',
     //alignItems: 'center',
     flexDirection: 'row',
-    bottom: 0
+    bottom: 0,
   },
   timeRecordList: {
     flex: 1,
-    height: 'auto'
+    height: 'auto',
   },
   activityActions: {
-    flexDirection: 'row'
-  }
-})
+    flexDirection: 'row',
+  },
+});
