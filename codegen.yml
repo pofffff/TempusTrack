@@ -1,0 +1,15 @@
+schema: https://choresbackend.herokuapp.com/
+overwrite: true
+generates:
+  _generated/graphql-schema.json:
+    plugins:
+      - introspection
+  src/types/_generated/graphql.ts:
+    plugins:
+      - 'typescript'
+config:
+  enumsAsTypes: true
+  scalars:
+    Date: Date
+    Time: Date
+    DateTime: Date
