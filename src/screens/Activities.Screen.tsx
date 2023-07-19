@@ -1,9 +1,14 @@
-import { Category, CategoryCollectionResult } from '../types';
+import {
+  ActivitiesScreenNavigationProp,
+  Category,
+  CategoryCollectionResult,
+} from '../types';
 import {
   CategoryListItem,
   CreateActivity,
   CreateCategory,
   Headline,
+  ScreenLayout,
 } from '../components';
 import { StyleSheet, View } from 'react-native';
 
@@ -13,7 +18,7 @@ import { nullFilter } from '../utils';
 import { useAuth } from '../context';
 import { useQuery } from '@apollo/client';
 
-interface ActivitiesScreenProps {}
+interface ActivitiesScreenProps extends ActivitiesScreenNavigationProp {}
 
 export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
   const { userId } = useAuth();
@@ -36,10 +41,11 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
     }
   };
 
-  console.log(data);
+  console.log(data?.categoryCollection?.categories?.length, 'hej');
 
   return (
-    <View style={styles.container}>
+    <ScreenLayout>
+      {/* <View style={styles.container}> */}
       <Headline type={'$m'} text={'Activities'} />
       {data?.categoryCollection.categories && (
         <View style={styles.categoryList}>
@@ -47,12 +53,12 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
             renderCategories()}
         </View>
       )}
-      <Text>hej</Text>
       <View style={styles.actionsWrapper}>
         <CreateCategory />
         <CreateActivity />
       </View>
-    </View>
+      {/* </View> */}
+    </ScreenLayout>
   );
 };
 
@@ -63,7 +69,6 @@ const styles = StyleSheet.create({
   actionsWrapper: {
     flex: 1,
     justifyContent: 'center',
-    // lignItems: 'center',
     flexDirection: 'row',
     bottom: 0,
   },
