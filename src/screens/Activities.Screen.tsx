@@ -25,7 +25,6 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
   const { data } = useQuery<CategoryCollectionResult>(CATEGORY_COLLECTION, {
     variables: { userId },
   });
-  console.log('rendered');
   const renderCategories = () => {
     if (data?.categoryCollection.categories) {
       return data.categoryCollection.categories

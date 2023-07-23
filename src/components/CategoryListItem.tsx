@@ -1,36 +1,17 @@
-import {
-  Activity,
-  Category,
-  CreateTimeRecordInput,
-  DetailsScreenNavigationProp,
-} from '../types';
-import {
-  DETAILS_SCREEN,
-  USER_ID_KEY,
-  colors,
-  font,
-  fontSize,
-  spacing,
-} from '../variables';
-import { FormLayout, ScreenLayout } from './_layouts';
-import {
-  Headline,
-  IconButton,
-  InputDate,
-  InputNumber,
-  RegularText,
-  TextButton,
-} from './_elements';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { memo, useEffect, useState } from 'react';
+import { Activity, Category, CreateTimeRecordInput } from '../types';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { USER_ID_KEY, colors, font, fontSize, spacing } from '../variables';
+import { memo, useContext, useEffect, useState } from 'react';
 import { useSecureStore, useTimeRecord } from '../hooks';
 
+import { ActivityListItem } from './ActivityListItem';
+import { ActivityModal } from './ActivityModal';
 import { CATEGORY_COLLECTION } from '../services/api';
-import { Icon } from './_icons';
+import { NavigationContext } from '@react-navigation/native';
+import { RegularText } from './_elements';
 import { nullFilter } from '../utils';
 import { useAuth } from '../context';
 import { useForm } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
 
 interface CategoryListItemProps {
   category: Category;
@@ -38,13 +19,13 @@ interface CategoryListItemProps {
 
 export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
   ({ category }) => {
-    const { navigation } = useNavigation<DetailsScreenNavigationProp>();
+    const navigation = useContext(NavigationContext);
     const { getValue } = useSecureStore();
     const { userId } = useAuth();
     const [categoryVisible, setCategoryVisible] = useState<boolean>(false);
     const [activityId, setActivityId] = useState<string | null>();
-
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+
     const {
       CreateTimeRecordMutation,
       createTimeRecordData,
@@ -102,8 +83,9 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
       setModalVisible(true);
     };
     const handleActivityClick = (activityId: string) => {
-      navigation.navigate('DetailsScreen', { activityId });
+      navigation?.navigate('DetailsScreen', { activityId });
     };
+
     return (
       category && (
         <View>
@@ -116,75 +98,24 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
               category.activities &&
               category.activities
                 .filter(nullFilter)
-                .map((activity: Activity) => {
-                  return (
-                    <>
-                      <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                          setModalVisible(false);
-                        }}>
-                        <ScreenLayout>
-                          <View style={styles.closeIconWrapper}>
-                            <IconButton
-                              style={styles.closeIcon}
-                              onPress={() => setModalVisible(false)}>
-                              <Icon name={'close'} size={36} />
-                            </IconButton>
-                          </View>
-                          <FormLayout>
-                            <Headline text={'Add time record'} type={'$m'} />
-                            <InputNumber
-                              label={'Amount'}
-                              name={'amount'}
-                              control={control}
-                              getFieldState={getFieldState}
-                              rules={{
-                                required: true,
-                              }}
-                            />
-                            <InputDate
-                              rules={undefined}
-                              control={control}
-                              getFieldState={getFieldState}
-                              name={'date'}
-                              label={'Date'}
-                            />
-                            <TextButton
-                              text={'Add'}
-                              onPress={handleSubmit(onSubmit)}
-                              primary
-                            />
-                          </FormLayout>
-                        </ScreenLayout>
-                      </Modal>
-                      <TouchableOpacity
-                        onPress={() => handleActivityClick(activity.id)}
-                        key={`Activity-${activity.id}`}>
-                        <View
-                          style={[
-                            styles.activityListItem,
-                            activityId === activity.id && styles.activityActive,
-                          ]}>
-                          <RegularText
-                            text={activity.name}
-                            style={styles.activityName}
-                          />
-                          <IconButton
-                            onPress={() => handleAddTimeClick(activity.id)}>
-                            <RegularText
-                              style={styles.activityName}
-                              text={`${activity.totalTimeTraced.toString()}h`}
-                            />
-                            <Icon name={'clock-time-four'} size={18} />
-                          </IconButton>
-                        </View>
-                      </TouchableOpacity>
-                    </>
-                  );
-                })}
+                .map((activity: Activity) => (
+                  <>
+                    <ActivityModal
+                      modalVisible={modalVisible}
+                      setModalVisible={setModalVisible}
+                      control={control}
+                      getFieldState={getFieldState}
+                      handleSubmit={handleSubmit}
+                      onSubmit={onSubmit}
+                    />
+                    <ActivityListItem
+                      activity={activity}
+                      activityId={activityId}
+                      handleActivityClick={handleActivityClick}
+                      handleAddTimeClick={handleAddTimeClick}
+                    />
+                  </>
+                ))}
           </TouchableOpacity>
         </View>
       )

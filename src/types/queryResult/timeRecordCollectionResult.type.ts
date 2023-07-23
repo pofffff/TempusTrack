@@ -1,5 +1,6 @@
-import { TimeRecordCollection } from '../_generated/graphql'
+import { Activity, TimeRecordCollection } from '../_generated/graphql';
 
-export interface TimeRecordCollectionResult {
-  timeRecordCollection: TimeRecordCollection
+export interface ActivityDataResult {
+  timeRecordCollection: TimeRecordCollection;
+  activity: Activity;
 }

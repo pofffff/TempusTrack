@@ -1,25 +1,29 @@
 import {
+  ActivityDataResult,
   DetailsScreenNavigationProp,
   TimeRecord,
-  TimeRecordCollectionResult,
 } from '../types';
-import {Headline, TextButton, TimeRecordListItem} from '../components';
-import {StyleSheet, View} from 'react-native';
+import {
+  Headline,
+  ScreenLayout,
+  TextButton,
+  TimeRecordListItem,
+} from '../components';
+import { StyleSheet, View } from 'react-native';
 
-import {TIME_RECORD_COLLECTION} from '../services/api';
-import {nullFilter} from '../utils';
-import {useAuth} from '../context';
-import {useQuery} from '@apollo/client';
-import {useState} from 'react';
+import { ACTIVITY_DATA } from '../services/api';
+import { nullFilter } from '../utils';
+import { useQuery } from '@apollo/client';
+import { useState } from 'react';
 
 interface DetailsScreenProps extends DetailsScreenNavigationProp {}
 
-export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
-  const {userId} = useAuth();
-  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const {data} = useQuery<TimeRecordCollectionResult>(TIME_RECORD_COLLECTION, {
-    variables: {userId},
+export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
+  // const { userId } = useAuth();
+  const [_deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [_editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const { data, error } = useQuery<ActivityDataResult>(ACTIVITY_DATA, {
+    variables: { activityId: route.params.activityId },
   });
 
   const onDeleteClick = () => {
@@ -41,7 +45,7 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
   };
 
   const timeRecords = () => {
-    if (data?.timeRecordCollection.timeRecords) {
+    if (data?.timeRecordCollection?.timeRecords) {
       return data.timeRecordCollection.timeRecords
         .filter(nullFilter)
         .map((timeRecord: TimeRecord) => {
@@ -55,17 +59,21 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = () => {
     }
   };
 
+  console.log(data, { route: route.params.activityId });
+  console.log({ error });
   return (
-    <View style={styles.container}>
-      <Headline type={'$m'} text={'Details'} />
-      {data?.timeRecordCollection.timeRecords && (
+    <ScreenLayout>
+      {/* <View style={styles.container}> */}
+      <Headline type={'$m'} text={data?.activity.name || 'Activity'} />
+      {data?.timeRecordCollection?.timeRecords && (
         <View style={styles.timeRecordList}>{timeRecords()}</View>
       )}
       <View style={styles.activityActions}>
         <TextButton text={'Edit'} onPress={() => onEditClick()} />
         <TextButton text={'Delete activity'} onPress={() => onDeleteClick()} />
       </View>
-    </View>
+      {/* </View> */}
+    </ScreenLayout>
   );
 };
 
@@ -86,5 +94,6 @@ const styles = StyleSheet.create({
   },
   activityActions: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

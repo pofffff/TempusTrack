@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 // export const CATEGORIES = gql`
 //   query TimeRecords($userId: ID!) {
@@ -11,8 +11,8 @@ import { gql } from '@apollo/client'
 //   }
 // `
 
-export const TIME_RECORD_COLLECTION = gql`
-  query TimeRecordCollection($activityId: ID!) {
+export const ACTIVITY_DATA = gql`
+  query ActivityData($activityId: ID!) {
     timeRecordCollection(activityId: $activityId) {
       timeRecords {
         id
@@ -20,5 +20,9 @@ export const TIME_RECORD_COLLECTION = gql`
         amount
       }
     }
+    activity(activityId: $activityId) {
+      id
+      name
+    }
   }
-`
+`;

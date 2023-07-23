@@ -1,5 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+export type TabParamList = {
+  Activity: undefined;
+  Archive: undefined;
+};
+
 export type RootStackParamList = {
   ActivitiesScreen: undefined;
   ArchiveScreen: undefined;
