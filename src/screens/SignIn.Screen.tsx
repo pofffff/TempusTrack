@@ -1,37 +1,38 @@
-import { FormLayout, Headline, InputText, TextButton } from '../components'
-import { StyleSheet, View } from 'react-native'
+import { FormLayout, Headline, InputText, TextButton } from '../components';
+import { StyleSheet, View } from 'react-native';
 
-import { LoginUserInput } from '../types'
-import { spacing } from '../variables'
-import { useAuth } from '../context'
-import { useForm } from 'react-hook-form'
+import { LoginUserInput } from '../types';
+import { spacing } from '../variables';
+import { useAuth } from '../context';
+import { useForm } from 'react-hook-form';
 
 interface SignInScreenProps extends LoginUserInput {
-  setSignUp(bol: boolean): void
+  setSignUp(bol: boolean): void;
 }
 
 export const SignInScreen: React.FC<SignInScreenProps> = ({ setSignUp }) => {
-  const { signIn } = useAuth()
+  const { signIn } = useAuth();
 
   const {
     control,
     getFieldState,
     handleSubmit,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<LoginUserInput>({
     defaultValues: {
       email: 'hoglund.matilda@gmail.com',
-      password: '12345678'
+      password: '12345678',
     },
-    mode: 'onChange'
-  })
+    mode: 'onChange',
+  });
 
   const onSubmit = (data: LoginUserInput) => {
+    console.log('here');
     if (data.email && data.password) {
-      const { email, password } = data
-      signIn(email, password)
+      const { email, password } = data;
+      signIn(email, password);
     }
-  }
+  };
 
   return (
     <FormLayout>
@@ -43,7 +44,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ setSignUp }) => {
         control={control}
         getFieldState={getFieldState}
         rules={{
-          required: true
+          required: true,
         }}
       />
       <InputText
@@ -53,7 +54,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ setSignUp }) => {
         control={control}
         getFieldState={getFieldState}
         rules={{
-          required: true
+          required: true,
         }}
         keyboardType={undefined}
       />
@@ -62,11 +63,11 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ setSignUp }) => {
         <TextButton text={'Sign up'} onPress={() => setSignUp(true)} />
       </View>
     </FormLayout>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   marginTop: {
-    marginTop: spacing.$m
-  }
-})
+    marginTop: spacing.$m,
+  },
+});

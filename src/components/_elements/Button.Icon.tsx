@@ -1,44 +1,44 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { JSXComponentProps } from '../../types'
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { spacing } from '../../variables'
+import { JSXComponentProps } from '../../types';
+import { spacing } from '../../variables';
 
 interface IconButtonProps extends JSXComponentProps {
-  alignRight?: boolean
-  onPress(): void
-  style?: any
+  alignRight?: boolean;
+  onPress(): void;
+  style?: any;
 }
 export const IconButton: React.FC<IconButtonProps> = ({
   alignRight,
   onPress,
   children,
-  style
+  style,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity hitSlop={20} onPress={onPress}>
       <View
         style={[
           styles.iconButtonContainer,
           alignRight && styles.alignRight,
-          { ...style }
+          { ...style },
         ]}>
         {children}
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   iconButtonContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   alignRight: {
     justifyContent: 'flex-end',
     flexDirection: 'row',
-    marginTop: spacing.$l
-  }
-})
+    marginTop: spacing.$l,
+  },
+});

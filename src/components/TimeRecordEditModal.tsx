@@ -1,115 +1,141 @@
-import { ACTIVITY_COLLECTION, TIME_RECORD_COLLECTION } from '../services/api'
+import { ACTIVITY_COLLECTION, ACTIVITY_DATA } from '../services/api';
 import {
   Activity,
   ActivityCollectionResult,
   QueryActivityCollectionArgs,
   TimeRecord,
-  UpdateTimeRecordInput
-} from '../types'
+  UpdateTimeRecordInput,
+} from '../types';
 import {
   Headline,
+  IconButton,
   InputDate,
   InputNumber,
   InputSelect,
-  TextButton
-} from './_elements'
-import { StyleSheet, View } from 'react-native'
-import { colors, font, fontSize, spacing } from '../variables'
+  InputTime,
+  TextButton,
+} from './_elements';
+import { StyleSheet, View } from 'react-native';
+import { colors, font, fontSize, spacing } from '../variables';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
-import { FormLayout } from '.'
-import { useAuth } from '../context'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useLazyQuery } from '@apollo/client'
-import { useTimeRecord } from '../hooks'
+import { FormLayout } from '.';
+import { Icon } from './_icons';
+import { getDateTime } from '../utils';
+import { useAuth } from '../context';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTimeRecord } from '../hooks';
 
 interface TimeRecordEditModalProps {
-  timeRecord: TimeRecord
-  setModalVisible: (value: boolean) => void
+  timeRecord: TimeRecord;
+  setModalVisible: (value: boolean) => void;
 }
 export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
   timeRecord,
-  setModalVisible
+  setModalVisible,
 }) => {
-  const { userId } = useAuth()
+  // const { userId } = useAuth();
 
-  const [
-    getActivities,
-    { data: activityData, loading: _activityLoading, error: _activityError }
-  ] = useLazyQuery<ActivityCollectionResult, QueryActivityCollectionArgs>(
-    ACTIVITY_COLLECTION
-  )
+  // const [
+  //   getActivities,
+  //   { data: activityData, loading: _activityLoading, error: activityError },
+  // ] = useLazyQuery<ActivityCollectionResult, QueryActivityCollectionArgs>(
+  //   ACTIVITY_COLLECTION,
+  // );
+
+  const { userId } = useAuth();
+  const { data: activityData, error: activityError } =
+    useQuery<ActivityCollectionResult>(ACTIVITY_COLLECTION, {
+      variables: { userId },
+    });
+
   const {
     UpdateTimeRecordMutation,
     updateTimeRecordData,
     updateTimeRecordError,
     DeleteTimeRecordsMutation,
     deleteTimeRecordsData,
-    deleteTimeRecordsError
-  } = useTimeRecord()
+    deleteTimeRecordsError,
+  } = useTimeRecord();
 
-  useEffect(() => {
-    if (userId) {
-      getActivities({ variables: { userId } })
-    }
-  }, [userId])
-
+  // useEffect(() => {
+  //   if (userId) {
+  //     console.log('running');
+  //     getActivities({ variables: { userId } });
+  //   }
+  // }, [userId]);
+  console.log({ timeRecord });
   const {
     control,
     getFieldState,
     handleSubmit,
-    formState: {}
+    formState: {},
   } = useForm<UpdateTimeRecordInput>({
     defaultValues: {
       activityId: timeRecord.activity.id,
       amount: timeRecord.amount,
-      date: timeRecord.date
+      date: new Date(timeRecord.date),
+      startTime: new Date(timeRecord.date),
     },
-    mode: 'onChange'
-  })
+    mode: 'onChange',
+  });
 
   const onSubmit = async (data: UpdateTimeRecordInput) => {
-    const { date, activityId, amount } = data
+    const { activityId, amount, date, startTime } = data;
+    const dateTime = getDateTime(date!, startTime!);
 
     UpdateTimeRecordMutation({
       variables: {
         timeRecordId: timeRecord.id,
-        input: { date, activityId, amount }
+        input: { activityId, amount, date: dateTime },
       },
       refetchQueries: [
         {
-          query: TIME_RECORD_COLLECTION,
-          variables: { activityId: timeRecord.activity.id }
-        }
-      ]
-    })
-  }
+          query: ACTIVITY_DATA,
+          variables: { activityId: timeRecord.activity.id },
+        },
+      ],
+    });
+  };
 
   const handleDelete = () => {
-    const timeReordIds = [timeRecord.id]
+    const timeReordIds = [timeRecord.id];
     DeleteTimeRecordsMutation({
       variables: { input: timeReordIds },
       refetchQueries: [
         {
-          query: TIME_RECORD_COLLECTION,
-          variables: { activityId: timeRecord.activity.id }
-        }
-      ]
-    })
-    setModalVisible(false)
-  }
+          query: ACTIVITY_DATA,
+          variables: { activityId: timeRecord.activity.id },
+        },
+      ],
+    });
+    setModalVisible(false);
+  };
+
+  const handleCloseClick = () => {
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.timeRecordEditModal}>
-      <FormLayout>
+      <View style={styles.timeRecordEditHeader}>
         <Headline text={'Edit time record'} type={'$m'} />
-        <InputSelect
-          label={'Activity'}
-          name={'activitId'}
-          control={control}
-          getFieldState={getFieldState}
-          items={activityData?.ActivityCollection.activities as Activity[]}
-        />
+        <IconButton onPress={handleCloseClick}>
+          <Icon name={'close'} size={32} />
+        </IconButton>
+      </View>
+      <FormLayout>
+        {activityData?.ActivityCollection?.activities && (
+          <InputSelect
+            label={'Activity'}
+            name={'activitId'}
+            control={control}
+            getFieldState={getFieldState}
+            items={activityData.ActivityCollection.activities as Activity[]}
+          />
+        )}
+
         <InputNumber
           label={'Amount'}
           name={'amount'}
@@ -124,28 +150,40 @@ export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
           label={'Date'}
           rules={undefined}
         />
+        <InputTime
+          name={'startTime'}
+          control={control}
+          getFieldState={getFieldState}
+          label={'Time'}
+        />
       </FormLayout>
       <View style={styles.timeRecordActions}>
-        <TextButton text={'Save'} onPress={handleSubmit(onSubmit)} />
+        <TextButton text={'Save'} primary onPress={handleSubmit(onSubmit)} />
         <TextButton text={'Delete'} onPress={() => handleDelete()} />
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   timeRecordEditModal: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    padding: spacing.$m,
+    backgroundColor: colors.$plainWhite,
+    height: '100%',
   },
-  timeRecordActions: {
-    flexDirection: 'row'
+  timeRecordEditHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
+  timeRecordActions: {},
   timeRecordText: {
     fontSize: fontSize.$s,
     fontFamily: font.$primary__regular,
     color: colors.$light,
     paddingHorizontal: spacing.$xs,
     textAlignVertical: 'center',
-    height: 46
-  }
-})
+    height: 46,
+  },
+});

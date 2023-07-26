@@ -1,73 +1,80 @@
 import {
   CATEGORIES,
   CATEGORY_COLLECTION,
-  CREATE_ACTIVITY
-} from '../services/api'
+  CREATE_ACTIVITY,
+} from '../services/api';
 import {
   Category,
   CategoryCollectionResult,
   CreateActivityInput,
-  QueryCategoryCollectionArgs
-} from '../types'
-import { FormLayout, ScreenLayout } from './_layouts'
+  QueryCategoryCollectionArgs,
+} from '../types';
+import { FormLayout, ScreenLayout } from './_layouts';
 import {
   Headline,
   IconButton,
   InputDate,
   InputSelect,
   InputText,
-  TextButton
-} from './_elements'
-import { Modal, StyleSheet, View } from 'react-native'
-import { USER_ID_KEY, colors, spacing } from '../variables'
-import { useEffect, useState } from 'react'
-import { useLazyQuery, useMutation } from '@apollo/client'
+  InputTime,
+  TextButton,
+} from './_elements';
+import { Modal, StyleSheet, View } from 'react-native';
+import { USER_ID_KEY, colors, spacing } from '../variables';
+import { useEffect, useState } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { Icon } from './_icons'
-import { useAuth } from '../context'
-import { useForm } from 'react-hook-form'
-import { useSecureStore } from '../hooks'
+import { Icon } from './_icons';
+import { getDateTime } from '../utils';
+import { useAuth } from '../context';
+import { useForm } from 'react-hook-form';
+import { useSecureStore } from '../hooks';
 
 export const CreateActivity: React.FC = () => {
-  const { getValue } = useSecureStore()
-  const { userId } = useAuth()
-  const [modalVisible, setModalVisible] = useState<boolean>(false)
-  const [CreateActivityMutation, { data, error }] = useMutation(CREATE_ACTIVITY)
+  const { getValue } = useSecureStore();
+  const { userId } = useAuth();
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [CreateActivityMutation, { data, error }] =
+    useMutation(CREATE_ACTIVITY);
   const [
     getCategories,
-    { data: categoryData, loading: _categoryLoading, error: _categoryError }
+    { data: categoryData, loading: _categoryLoading, error: _categoryError },
   ] = useLazyQuery<CategoryCollectionResult, QueryCategoryCollectionArgs>(
-    CATEGORIES
-  )
+    CATEGORIES,
+  );
 
   const { control, getFieldState, getValues, setValue, handleSubmit } =
     useForm<CreateActivityInput>({
       defaultValues: {
         name: '',
         startDate: undefined,
-        categoryId: ''
+        startTime: undefined,
+        categoryId: '',
       },
-      mode: 'onChange'
-    })
+      mode: 'onChange',
+    });
 
   const onSubmit = async (idata: CreateActivityInput) => {
-    const { name, categoryId, startDate } = idata
-    if (!name || !categoryId) return
+    const { name, categoryId, startDate, startTime } = idata;
+    if (!name || !categoryId) return;
+
+    const dateTime = getDateTime(startDate!, startTime!);
+
     CreateActivityMutation({
       variables: {
         userId: await getValue(USER_ID_KEY),
         input: {
           name,
           categoryId,
-          startDate: startDate ? startDate : new Date()
-        }
+          startDate: dateTime || new Date(),
+        },
       },
       refetchQueries: [
         {
           query: CATEGORY_COLLECTION,
-          variables: { userId: userId }
-        }
-      ]
+          variables: { userId: userId },
+        },
+      ],
       // TODO Refactor refetch whole collection everytime
       // update(cache, { data }) {
       //     console.log(cache)
@@ -86,24 +93,24 @@ export const CreateActivity: React.FC = () => {
       //         }
       //     })
       // }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     // TODO Should be possible to use useQuery instead of lazy
     if (userId) {
       getCategories({
-        variables: { userId }
-      })
+        variables: { userId },
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId])
+  }, [userId]);
 
   useEffect(() => {
     if (data) {
-      setModalVisible(false)
+      setModalVisible(false);
     }
-  }, [data, error])
+  }, [data, error]);
 
   return !categoryData?.categoryCollection ? null : (
     <View style={styles.container}>
@@ -112,7 +119,7 @@ export const CreateActivity: React.FC = () => {
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible)
+          setModalVisible(!modalVisible);
         }}>
         <ScreenLayout>
           <View style={styles.closeIconWrapper}>
@@ -130,7 +137,7 @@ export const CreateActivity: React.FC = () => {
               control={control}
               getFieldState={getFieldState}
               rules={{
-                required: true
+                required: true,
               }}
               keyboardType={undefined}
             />
@@ -148,6 +155,12 @@ export const CreateActivity: React.FC = () => {
               label={'Start date'}
               rules={undefined}
             />
+            <InputTime
+              name={'startTime'}
+              control={control}
+              getFieldState={getFieldState}
+              label={'Start time'}
+            />
             <TextButton
               text={'Create'}
               onPress={handleSubmit(onSubmit)}
@@ -158,8 +171,8 @@ export const CreateActivity: React.FC = () => {
       </Modal>
       <TextButton text={'+ Activity'} onPress={() => setModalVisible(true)} />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: { margin: spacing.$xs, flex: 1, justifyContent: 'flex-end' },
@@ -167,12 +180,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.$plainWhite,
     padding: spacing.$xl,
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   closeIconWrapper: {
-    margin: spacing.$xs
+    margin: spacing.$xs,
   },
   closeIcon: {
-    alignSelf: 'flex-end'
-  }
-})
+    alignSelf: 'flex-end',
+  },
+});

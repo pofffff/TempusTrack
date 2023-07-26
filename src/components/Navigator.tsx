@@ -12,7 +12,7 @@ function ActivitiesStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
       }}>
       <Stack.Screen name="ActivitiesScreen" component={ActivitiesScreen} />
       <Stack.Screen name="DetailsScreen" component={DetailsScreen} />

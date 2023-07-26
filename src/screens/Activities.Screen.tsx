@@ -40,8 +40,6 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
     }
   };
 
-  console.log(data?.categoryCollection?.categories?.length, 'hej');
-
   return (
     <ScreenLayout>
       {/* <View style={styles.container}> */}

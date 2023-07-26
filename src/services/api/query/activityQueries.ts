@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const ACTIVITY_COLLECTION = gql`
   query ActivityCollection($userId: ID!) {
@@ -13,4 +13,4 @@ export const ACTIVITY_COLLECTION = gql`
       }
     }
   }
-`
+`;

@@ -45,8 +45,8 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
   };
 
   const timeRecords = () => {
-    if (data?.timeRecordCollection?.timeRecords) {
-      return data.timeRecordCollection.timeRecords
+    if (data?.activity?.timeRecords) {
+      return data.activity.timeRecords
         .filter(nullFilter)
         .map((timeRecord: TimeRecord) => {
           return (
@@ -59,15 +59,11 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
     }
   };
 
-  console.log(data, { route: route.params.activityId });
-  console.log({ error });
   return (
     <ScreenLayout>
       {/* <View style={styles.container}> */}
       <Headline type={'$m'} text={data?.activity.name || 'Activity'} />
-      {data?.timeRecordCollection?.timeRecords && (
-        <View style={styles.timeRecordList}>{timeRecords()}</View>
-      )}
+      <View style={styles.timeRecordList}>{timeRecords()}</View>
       <View style={styles.activityActions}>
         <TextButton text={'Edit'} onPress={() => onEditClick()} />
         <TextButton text={'Delete activity'} onPress={() => onDeleteClick()} />
