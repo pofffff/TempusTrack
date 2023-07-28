@@ -18,7 +18,7 @@ import { nullFilter } from '../utils';
 import { useAuth } from '../context';
 import { useQuery } from '@apollo/client';
 
-interface ActivitiesScreenProps extends ActivitiesScreenNavigationProp {}
+interface ActivitiesScreenProps {}
 
 export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
   const { userId } = useAuth();
@@ -43,7 +43,6 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = () => {
   return (
     <ScreenLayout>
       {/* <View style={styles.container}> */}
-      <Headline type={'$m'} text={'Activities'} />
       {data?.categoryCollection.categories && (
         <View style={styles.categoryList}>
           {data?.categoryCollection?.categories?.length > 0 &&

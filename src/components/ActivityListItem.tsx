@@ -1,9 +1,8 @@
-import { IconButton, RegularText } from './_elements';
+import { Icon, IconButton, RegularText } from './_elements';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { colors, font, fontSize, spacing } from '../variables';
+import { colors, font, fontSize, spacing } from '../settings';
 
 import { Activity } from '../types';
-import { Icon } from './_icons';
 
 interface ActivityListItemProps {
   activity: Activity;

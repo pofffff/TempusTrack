@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 
 import { CreateUserInput } from '../types'
 import { SIGN_UP_USER } from '../services/api'
-import { spacing } from '../variables'
+import { spacing } from '../settings'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from '@apollo/client'

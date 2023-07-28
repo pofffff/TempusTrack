@@ -3,10 +3,11 @@ import // AntDesign,
 // MaterialCommunityIcons
 // SimpleLineIcons
 'react-native-vector-icons'
+
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { colors } from '../../settings'
 
 MIcon.loadFont()
-import { colors } from '../../variables'
 
 interface IconProps {
   color?: string

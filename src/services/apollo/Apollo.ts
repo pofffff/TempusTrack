@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
+import { GRAPHQL_URL, TOKEN_KEY } from '../../settings'
 
 import { FactoryApolloClient } from '../../types'
-// import env from 'react-native-config'
-
-import { GRAPHQL_URL, TOKEN_KEY } from '../../variables'
 import { setContext } from '@apollo/client/link/context'
 import { useSecureStore } from '../../hooks'
+
+// import env from 'react-native-config'
+
 
 const httpLink = createHttpLink({
   uri: GRAPHQL_URL

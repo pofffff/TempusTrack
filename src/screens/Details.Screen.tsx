@@ -4,40 +4,44 @@ import {
   TimeRecord,
 } from '../types';
 import {
-  Headline,
+  DeleteModal,
   ScreenLayout,
   TextButton,
   TimeRecordListItem,
 } from '../components';
 import { StyleSheet, View } from 'react-native';
+import { useContext, useState } from 'react';
 
 import { ACTIVITY_DATA } from '../services/api';
+import { NavigationContext } from '@react-navigation/native';
 import { nullFilter } from '../utils';
+import { useActivity } from '../hooks';
 import { useQuery } from '@apollo/client';
-import { useState } from 'react';
 
 interface DetailsScreenProps extends DetailsScreenNavigationProp {}
 
 export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
-  // const { userId } = useAuth();
-  const [_deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const navigation = useContext(NavigationContext);
+  const { DeleteActivityMutation } = useActivity();
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [_editModalVisible, setEditModalVisible] = useState<boolean>(false);
   const { data, error } = useQuery<ActivityDataResult>(ACTIVITY_DATA, {
     variables: { activityId: route.params.activityId },
   });
 
-  const onDeleteClick = () => {
-    //  const timeReordIds = [timeRecord.id]
-    //  DeleteTimeRecordsMutation({
-    //    variables: { input: timeReordIds },
-    //    refetchQueries: [
-    //      {
-    //        query: TIME_RECORD_COLLECTION,
-    //        variables: { activityId: timeRecord.activity.id }
-    //      }
-    //    ]
-    //  })
-    setDeleteModalVisible(true);
+  const handleDelete = ({ cascade }: { cascade: boolean }) => {
+    const input = { activityIds: [route.params.activityId], cascade };
+    DeleteActivityMutation({
+      variables: { input },
+      refetchQueries: [
+        {
+          query: ACTIVITY_DATA,
+          variables: { activityId: route.params.activityId },
+        },
+      ],
+    });
+    setDeleteModalVisible(false);
+    navigation?.navigate('Activities');
   };
 
   const onEditClick = () => {
@@ -59,14 +63,23 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
     }
   };
 
+  const onDeleteClick = () => {
+    setDeleteModalVisible(true);
+  };
+
   return (
     <ScreenLayout>
       {/* <View style={styles.container}> */}
-      <Headline type={'$m'} text={data?.activity.name || 'Activity'} />
       <View style={styles.timeRecordList}>{timeRecords()}</View>
       <View style={styles.activityActions}>
         <TextButton text={'Edit'} onPress={() => onEditClick()} />
-        <TextButton text={'Delete activity'} onPress={() => onDeleteClick()} />
+        <TextButton text={'Delete activity'} onPress={onDeleteClick} />
+        <DeleteModal
+          visible={deleteModalVisible}
+          setDeleteModalVisible={setDeleteModalVisible}
+          handleDelete={handleDelete}
+          name={data?.activity?.name}
+        />
       </View>
       {/* </View> */}
     </ScreenLayout>

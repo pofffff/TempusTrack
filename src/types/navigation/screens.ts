@@ -1,27 +1,29 @@
+import { routes, tabs } from '../../settings';
+
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export type TabParamList = {
-  Activity: undefined;
-  Archive: undefined;
+export type RootStackParamList = {
+  [routes.ACTIVITIES]: undefined;
+  [routes.ARCHIVE]: undefined;
+  [routes.DETAILS]: { activityId: string };
 };
 
-export type RootStackParamList = {
-  ActivitiesScreen: undefined;
-  ArchiveScreen: undefined;
-  DetailsScreen: { activityId: string };
+export type TabParamList = {
+  [tabs.ACTIVITIES]: undefined;
+  [tabs.ARCHIVE]: undefined;
 };
 
 export type DetailsScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
-  'DetailsScreen'
+  'Activity details'
 >;
 
 export type ArchiveScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
-  'ArchiveScreen'
+  'Archive'
 >;
 
 export type ActivitiesScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
-  'ActivitiesScreen'
+  'Activities'
 >;

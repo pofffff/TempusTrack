@@ -1,9 +1,9 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { colors, font, fontSize, spacing } from '../../variables';
+import { colors, font, fontSize, spacing } from '../../settings';
 
 import { Controller } from 'react-hook-form';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Icon } from '../_icons';
+import { Icon } from './Icon';
 import { IconButton } from './Button.Icon';
 import { ReactHookForm } from '../../types';
 import { RegularText } from './Text.Regular';

@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { JSXComponentProps } from '../../types';
-import { spacing } from '../../variables';
+import { spacing } from '../../settings';
 
 interface IconButtonProps extends JSXComponentProps {
   alignRight?: boolean;

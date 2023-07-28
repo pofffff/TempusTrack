@@ -15,12 +15,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { CATEGORY_COLLECTION } from '../services/api';
 import { Screen } from 'react-native-screens';
-import { colors } from '../variables';
+import { colors } from '../settings';
 import { nullFilter } from '../utils';
 import { useAuth } from '../context';
 import { useQuery } from '@apollo/client';
 
-interface ActivitiesScreenProps extends ArchiveScreenNavigationProp {}
+interface ActivitiesScreenProps {}
 
 export const ArchiveScreen: React.FC<ActivitiesScreenProps> = () => {
   const { userId } = useAuth();
@@ -46,7 +46,6 @@ export const ArchiveScreen: React.FC<ActivitiesScreenProps> = () => {
   return (
     <ScreenLayout>
       {/* <View style={styles.container}> */}
-      <Headline type={'$m'} text={'Archive'} />
       {data?.categoryCollection.categories ? (
         <View style={styles.categoryList}>
           {data?.categoryCollection?.categories?.length > 0 &&

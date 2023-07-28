@@ -1,6 +1,6 @@
 import { Activity, Category, CreateTimeRecordInput } from '../types';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { USER_ID_KEY, colors, font, fontSize, spacing } from '../variables';
+import { USER_ID_KEY, colors, font, fontSize, spacing } from '../settings';
 import { memo, useContext, useEffect, useState } from 'react';
 import { useSecureStore, useTimeRecord } from '../hooks';
 
@@ -48,7 +48,6 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
 
     const onSubmit = async (data: CreateTimeRecordInput) => {
       const { amount, date: iDate } = data;
-      console.log({ activityId, amount, iDate });
       if (!amount || !activityId) return;
       // TODO create date in BE instead when done
       const date = iDate ?? new Date();
@@ -83,7 +82,7 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
       setModalVisible(true);
     };
     const handleActivityClick = (activityId: string) => {
-      navigation?.navigate('DetailsScreen', { activityId });
+      navigation?.navigate('Activity details', { activityId });
     };
 
     return (

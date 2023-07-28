@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { colors, font, fontSize, spacing } from '../../variables'
+import { colors, font, fontSize, spacing } from '../../settings'
 
 interface TextButtonProps {
   text: string

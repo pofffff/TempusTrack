@@ -2,7 +2,7 @@ import { FormLayout, Headline, InputText, TextButton } from '../components';
 import { StyleSheet, View } from 'react-native';
 
 import { LoginUserInput } from '../types';
-import { spacing } from '../variables';
+import { spacing } from '../settings';
 import { useAuth } from '../context';
 import { useForm } from 'react-hook-form';
 
@@ -27,7 +27,6 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ setSignUp }) => {
   });
 
   const onSubmit = (data: LoginUserInput) => {
-    console.log('here');
     if (data.email && data.password) {
       const { email, password } = data;
       signIn(email, password);

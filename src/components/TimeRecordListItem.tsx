@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { colors, font, fontSize, spacing } from '../variables';
+import { colors, font, fontSize, spacing } from '../settings';
 import { memo, useState } from 'react';
 
 import { RegularText } from './_elements';
@@ -16,7 +16,6 @@ export const TimeRecordListItem: React.FC<TimeRecordListItemProps> = memo(
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const handleClick = () => {
-      console.log('click');
       setModalVisible(!modalVisible);
     };
 
@@ -36,7 +35,7 @@ export const TimeRecordListItem: React.FC<TimeRecordListItemProps> = memo(
             </View>
           </TouchableOpacity>
           <Modal
-            transparent={true}
+            transparent
             visible={modalVisible}
             onRequestClose={() => {
               setModalVisible(false);

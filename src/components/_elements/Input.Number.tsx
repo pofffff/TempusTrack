@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
-import { colors, font, fontSize, spacing } from '../../variables'
+import { colors, font, fontSize, spacing } from '../../settings'
+import { useEffect, useState } from 'react'
 
 import { Controller } from 'react-hook-form'
 import { ReactHookForm } from '../../types'

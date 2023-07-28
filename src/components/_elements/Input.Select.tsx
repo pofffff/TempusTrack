@@ -1,25 +1,25 @@
-import { Activity, Category, ReactHookForm } from '../../types'
-import { StyleSheet, View } from 'react-native'
-import { colors, font, fontSize, spacing } from '../../variables'
-import { useEffect, useState } from 'react'
+import { Activity, Category, ReactHookForm } from '../../types';
+import { StyleSheet, View } from 'react-native';
+import { colors, font, fontSize, spacing } from '../../settings';
+import { useEffect, useState } from 'react';
 
-import { Controller } from 'react-hook-form'
-import { Icon } from '../_icons'
-import { RegularText } from './Text.Regular'
-import SelectDropdown from 'react-native-select-dropdown'
+import { Controller } from 'react-hook-form';
+import { Icon } from './Icon';
+import { RegularText } from './Text.Regular';
+import SelectDropdown from 'react-native-select-dropdown';
 
 interface InputSelectProps extends ReactHookForm {
-  label: string
-  name: string
-  secureTextEntry?: boolean
+  label: string;
+  name: string;
+  secureTextEntry?: boolean;
   // keyboardType?: KeyboardTypeOptions | undefined
-  rules?: any
-  items: Category[] | Activity[]
+  rules?: any;
+  items: Category[] | Activity[];
 }
 
 interface Option {
-  key: string
-  value: string
+  key: string;
+  value: string;
 }
 
 export const InputSelect: React.FC<InputSelectProps> = ({
@@ -29,33 +29,33 @@ export const InputSelect: React.FC<InputSelectProps> = ({
   control,
   getFieldState,
   rules,
-  items
+  items,
 }) => {
-  const [_selected, _setSelected] = useState('')
-  const [_data, setData] = useState<Option[]>([])
-  const [errorMessage, setErrorMessage] = useState<string | null>()
+  const [_selected, _setSelected] = useState('');
+  const [_data, setData] = useState<Option[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>();
 
   useEffect(() => {
-    const error = getFieldState(name).error
+    const error = getFieldState(name).error;
     if (error?.message) {
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     } else if (error?.type === 'passwordMatch') {
-      setErrorMessage('Password does not match')
+      setErrorMessage('Password does not match');
     } else {
-      setErrorMessage(null)
+      setErrorMessage(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getFieldState(name).error])
+  }, [getFieldState(name).error]);
 
   useEffect(() => {
     if (items) {
       let newArray = items.map(item => {
-        return { key: item.id, value: item?.name }
-      })
+        return { key: item.id, value: item?.name };
+      });
       //Set Data Variable
-      setData(newArray)
+      setData(newArray);
     }
-  }, [items])
+  }, [items]);
 
   return (
     <View style={styles.outerContainer}>
@@ -75,17 +75,17 @@ export const InputSelect: React.FC<InputSelectProps> = ({
               rowStyle={styles.dropdownRowStyle}
               rowTextStyle={styles.dropdownRowTxtStyle}
               buttonTextAfterSelection={(selectedItem, _index) => {
-                return selectedItem.name
+                return selectedItem.name;
               }}
               rowTextForSelection={(item, _index) => {
-                return item.name
+                return item.name;
               }}
               renderDropdownIcon={(isOpened: boolean) => {
                 return isOpened ? (
                   <Icon name={'menu-up'} />
                 ) : (
                   <Icon name={'menu-down'} />
-                )
+                );
               }}
             />
           )}
@@ -95,28 +95,28 @@ export const InputSelect: React.FC<InputSelectProps> = ({
         <RegularText style={styles.fieldError} text={errorMessage} />
       ) : null}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   outerContainer: {
-    marginVertical: spacing.$xs
+    marginVertical: spacing.$xs,
   },
   inneContainer: {
-    marginVertical: spacing.$xxs
+    marginVertical: spacing.$xxs,
   },
 
   label: {
     paddingLeft: spacing.$xxs,
     fontSize: fontSize.$xs,
-    fontFamily: font.$text__light
+    fontFamily: font.$text__light,
   },
 
   fieldError: {
     paddingLeft: spacing.$xxs,
     paddingTop: spacing.$xxs,
     fontSize: fontSize.$xs,
-    fontFamily: font.$primary__medium
+    fontFamily: font.$primary__medium,
   },
 
   input: {
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
     padding: spacing.$xs,
     maxWidth: 500,
     borderWidth: 1,
-    color: colors.$black
+    color: colors.$black,
   },
 
   option: {
-    padding: spacing.$xxs
+    padding: spacing.$xxs,
   },
 
   dropdownBtnStyle: {
@@ -139,17 +139,17 @@ const styles = StyleSheet.create({
     backgroundColor: '',
     borderRadius: 0,
     borderWidth: 1,
-    borderColor: colors.$black
+    borderColor: colors.$black,
   },
   dropdownBtnTxtStyle: {
     color: colors.$black,
     textAlign: 'left',
     fontFamily: font.$text__light,
-    fontSize: fontSize.$xs
+    fontSize: fontSize.$xs,
   },
   dropdownRowStyle: {
     backgroundColor: colors.$plainWhite,
-    borderBottomColor: colors.$grey
+    borderBottomColor: colors.$grey,
   },
   dropdownRowTxtStyle: {
     color: colors.$black,
@@ -157,6 +157,6 @@ const styles = StyleSheet.create({
     fontFamily: font.$text__light,
     fontSize: fontSize.$s,
     paddingLeft: spacing.$xs,
-    textTransform: 'capitalize'
-  }
-})
+    textTransform: 'capitalize',
+  },
+});

@@ -9,3 +9,5 @@ export * from './Button.Text';
 
 export * from './Text.Heading';
 export * from './Text.Regular';
+
+export * from './Icon';

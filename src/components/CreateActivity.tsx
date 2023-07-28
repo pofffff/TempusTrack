@@ -9,9 +9,10 @@ import {
   CreateActivityInput,
   QueryCategoryCollectionArgs,
 } from '../types';
-import { FormLayout, ScreenLayout } from './_layouts';
+import { FormLayout, ScreenLayout } from './_common';
 import {
   Headline,
+  Icon,
   IconButton,
   InputDate,
   InputSelect,
@@ -20,11 +21,10 @@ import {
   TextButton,
 } from './_elements';
 import { Modal, StyleSheet, View } from 'react-native';
-import { USER_ID_KEY, colors, spacing } from '../variables';
+import { USER_ID_KEY, colors, spacing } from '../settings';
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { Icon } from './_icons';
 import { getDateTime } from '../utils';
 import { useAuth } from '../context';
 import { useForm } from 'react-hook-form';

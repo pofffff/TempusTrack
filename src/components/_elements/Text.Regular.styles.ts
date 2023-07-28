@@ -1,4 +1,4 @@
-import { colors, font, fontSize } from '../../variables'
+import { colors, font, fontSize } from '../../settings'
 
 import { StyleSheet } from 'react-native'
 

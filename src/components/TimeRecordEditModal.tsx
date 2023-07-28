@@ -6,6 +6,7 @@ import {
   TimeRecord,
   UpdateTimeRecordInput,
 } from '../types';
+import { DeleteModal, FormLayout } from './_common/';
 import {
   Headline,
   IconButton,
@@ -15,15 +16,14 @@ import {
   InputTime,
   TextButton,
 } from './_elements';
+import { SetStateAction, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { colors, font, fontSize, spacing } from '../variables';
+import { colors, font, fontSize, spacing } from '../settings';
 import { useLazyQuery, useQuery } from '@apollo/client';
 
-import { FormLayout } from '.';
-import { Icon } from './_icons';
+import { Icon } from './_elements';
 import { getDateTime } from '../utils';
 import { useAuth } from '../context';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTimeRecord } from '../hooks';
 
@@ -35,6 +35,7 @@ export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
   timeRecord,
   setModalVisible,
 }) => {
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   // const { userId } = useAuth();
 
   // const [
@@ -61,11 +62,9 @@ export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
 
   // useEffect(() => {
   //   if (userId) {
-  //     console.log('running');
   //     getActivities({ variables: { userId } });
   //   }
   // }, [userId]);
-  console.log({ timeRecord });
   const {
     control,
     getFieldState,
@@ -117,6 +116,10 @@ export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
     setModalVisible(false);
   };
 
+  const handleDeleteClick = () => {
+    setDeleteModalVisible(true);
+  };
+
   return (
     <View style={styles.timeRecordEditModal}>
       <View style={styles.timeRecordEditHeader}>
@@ -135,7 +138,6 @@ export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
             items={activityData.ActivityCollection.activities as Activity[]}
           />
         )}
-
         <InputNumber
           label={'Amount'}
           name={'amount'}
@@ -159,7 +161,7 @@ export const TimeRecordEditModal: React.FC<TimeRecordEditModalProps> = ({
       </FormLayout>
       <View style={styles.timeRecordActions}>
         <TextButton text={'Save'} primary onPress={handleSubmit(onSubmit)} />
-        <TextButton text={'Delete'} onPress={() => handleDelete()} />
+        <TextButton text={'Delete'} onPress={() => handleDeleteClick()} />
       </View>
     </View>
   );

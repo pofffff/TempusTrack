@@ -1,6 +1,7 @@
-import { FormLayout, ScreenLayout } from './_layouts';
+import { FormLayout, ScreenLayout } from './_common';
 import {
   Headline,
+  Icon,
   IconButton,
   InputDate,
   InputNumber,
@@ -8,8 +9,7 @@ import {
 } from './_elements';
 import { Modal, StyleSheet, View } from 'react-native';
 
-import { Icon } from './_icons';
-import { spacing } from '../variables';
+import { spacing } from '../settings';
 
 interface ActivityModalProps {
   modalVisible: boolean;

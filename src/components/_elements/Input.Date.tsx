@@ -1,27 +1,27 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { colors, font, fontSize, spacing } from '../../variables'
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { colors, font, fontSize, spacing } from '../../settings';
 
-import { Controller } from 'react-hook-form'
-import DateTimePickerModal from 'react-native-modal-datetime-picker'
-import { Icon } from '../_icons'
-import { IconButton } from './Button.Icon'
-import { ReactHookForm } from '../../types'
-import { RegularText } from './Text.Regular'
-import { useState } from 'react'
+import { Controller } from 'react-hook-form';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Icon } from './Icon';
+import { IconButton } from './Button.Icon';
+import { ReactHookForm } from '../../types';
+import { RegularText } from './Text.Regular';
+import { useState } from 'react';
 
 interface InputDateProps extends ReactHookForm {
-  label: string
-  name: 'startDate' | 'date'
-  rules?: any
+  label: string;
+  name: 'startDate' | 'date';
+  rules?: any;
 }
 
 export const InputDate: React.FC<InputDateProps> = ({
   control,
   label,
   name,
-  rules
+  rules,
 }) => {
-  const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
+  const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false);
 
   return (
     <View style={styles.wrapper}>
@@ -45,8 +45,8 @@ export const InputDate: React.FC<InputDateProps> = ({
                 isVisible={datePickerVisible}
                 mode="date"
                 onConfirm={(d: Date) => {
-                  onChange(d)
-                  setDatePickerVisible(false)
+                  onChange(d);
+                  setDatePickerVisible(false);
                 }}
                 onCancel={() => setDatePickerVisible(false)}
               />
@@ -55,8 +55,8 @@ export const InputDate: React.FC<InputDateProps> = ({
         )}
       />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -66,18 +66,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: spacing.$xs,
-    marginVertical: spacing.$xs
+    marginVertical: spacing.$xs,
   },
 
   inputText: {
     padding: spacing.$xxs,
     fontSize: fontSize.$xs,
-    fontFamily: font.$text__light
+    fontFamily: font.$text__light,
   },
 
   startDateText: {
     fontSize: fontSize.$xs,
-    fontFamily: font.$text__light
+    fontFamily: font.$text__light,
   },
 
   datePicker: {
@@ -85,6 +85,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     width: 320,
     height: 260,
-    display: 'flex'
-  }
-})
+    display: 'flex',
+  },
+});

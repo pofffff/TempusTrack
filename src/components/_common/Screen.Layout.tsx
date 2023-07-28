@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { colors, spacing } from '../../variables';
+import { colors, spacing } from '../../settings';
 
 import { JSXComponentProps } from '../../types';
 import { ScrollLayout } from './Scroll.Layout';

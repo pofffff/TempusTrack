@@ -1,62 +1,61 @@
-import { FormLayout, ScreenLayout } from './_layouts'
-import { Headline, IconButton, InputText, TextButton } from './_elements'
-import { Modal, StyleSheet, View } from 'react-native'
-import { USER_ID_KEY, colors, spacing } from '../variables'
-import { useCategory, useSecureStore } from '../hooks'
-import { useEffect, useState } from 'react'
+import { FormLayout, ScreenLayout } from './_common';
+import { Headline, Icon, IconButton, InputText, TextButton } from './_elements';
+import { Modal, StyleSheet, View } from 'react-native';
+import { USER_ID_KEY, colors, spacing } from '../settings';
+import { useCategory, useSecureStore } from '../hooks';
+import { useEffect, useState } from 'react';
 
-import { CATEGORY_COLLECTION } from '../services/api'
-import { CreateCategoryInput } from '../types'
-import { Icon } from './_icons'
-import { useAuth } from '../context'
-import { useForm } from 'react-hook-form'
+import { CATEGORY_COLLECTION } from '../services/api';
+import { CreateCategoryInput } from '../types';
+import { useAuth } from '../context';
+import { useForm } from 'react-hook-form';
 
 export const CreateCategory: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false)
-  const { getValue } = useSecureStore()
-  const { userId } = useAuth()
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const { getValue } = useSecureStore();
+  const { userId } = useAuth();
   const { CreateCategoryMutation, createCategoryData, createCategoryError } =
-    useCategory()
+    useCategory();
 
   const {
     control,
     getFieldState,
     handleSubmit,
-    formState: {}
+    formState: {},
   } = useForm<CreateCategoryInput>({
     defaultValues: {
-      name: ''
+      name: '',
     },
-    mode: 'onChange'
-  })
+    mode: 'onChange',
+  });
 
   const onSubmit = async (data: CreateCategoryInput) => {
-    const { name } = data
-    if (!name) return
+    const { name } = data;
+    if (!name) return;
 
     CreateCategoryMutation({
       variables: {
         userId: await getValue(USER_ID_KEY),
-        input: { name }
+        input: { name },
       },
       refetchQueries: [
         {
           query: CATEGORY_COLLECTION,
-          variables: { userId }
-        }
-      ]
-    })
-  }
+          variables: { userId },
+        },
+      ],
+    });
+  };
 
   useEffect(() => {
     if (createCategoryData) {
-      setModalVisible(false)
+      setModalVisible(false);
     }
     if (createCategoryError) {
       // TODO Error component stuff
-      console.error('Error add category')
+      console.error('Error add category');
     }
-  }, [createCategoryData, createCategoryError])
+  }, [createCategoryData, createCategoryError]);
 
   return (
     <View style={styles.container}>
@@ -65,7 +64,7 @@ export const CreateCategory: React.FC = () => {
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible)
+          setModalVisible(!modalVisible);
         }}>
         <View style={styles.closeIcon}>
           <IconButton onPress={() => setModalVisible(false)}>
@@ -81,7 +80,7 @@ export const CreateCategory: React.FC = () => {
               control={control}
               getFieldState={getFieldState}
               rules={{
-                required: true
+                required: true,
               }}
               keyboardType={undefined}
             />
@@ -91,22 +90,22 @@ export const CreateCategory: React.FC = () => {
       </Modal>
       <TextButton text={'+ Category'} onPress={() => setModalVisible(true)} />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     margin: spacing.$xs,
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   form: {
     backgroundColor: colors.$plainWhite,
     padding: spacing.$xl,
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   closeIcon: {
-    margin: spacing.$l
-  }
-})
+    margin: spacing.$l,
+  },
+});

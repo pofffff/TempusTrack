@@ -3,7 +3,7 @@ import {
   QueryLoginUserArgs,
   QueryLoginUserPayload,
 } from '../types';
-import { TOKEN_KEY, USER_ID_KEY } from '../variables';
+import { TOKEN_KEY, USER_ID_KEY } from '../settings';
 import {
   createContext,
   memo,
@@ -48,7 +48,6 @@ export const AuthProvider = memo(({ children }: JSXComponentProps) => {
   >(SIGN_IN_USER);
 
   const signIn = (email: string, password: string) => {
-    console.log('here 2');
     signInQuery({
       variables: {
         input: { email, password },
