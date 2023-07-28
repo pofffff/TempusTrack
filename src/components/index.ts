@@ -1,3 +1,4 @@
+export * from './ActivityModal';
 export * from './AuthSceneView';
 export * from './CategoryListItem';
 export * from './CreateActivity';

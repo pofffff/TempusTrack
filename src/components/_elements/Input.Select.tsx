@@ -33,26 +33,12 @@ export const InputSelect: React.FC<InputSelectProps> = ({
 }) => {
   const [_selected, _setSelected] = useState('');
   const [_data, setData] = useState<Option[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string | null>();
-
-  useEffect(() => {
-    const error = getFieldState(name).error;
-    if (error?.message) {
-      setErrorMessage(error.message);
-    } else if (error?.type === 'passwordMatch') {
-      setErrorMessage('Password does not match');
-    } else {
-      setErrorMessage(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getFieldState(name).error]);
 
   useEffect(() => {
     if (items) {
       let newArray = items.map(item => {
         return { key: item.id, value: item?.name };
       });
-      //Set Data Variable
       setData(newArray);
     }
   }, [items]);
@@ -65,11 +51,19 @@ export const InputSelect: React.FC<InputSelectProps> = ({
           name={name}
           control={control}
           rules={rules}
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <SelectDropdown
+              key={`Select-${value}`}
               data={items}
-              onSelect={(selectedItem, _index) => onChange(selectedItem.id)}
-              defaultButtonText={'Select'}
+              onSelect={(selectedItem, _index) => {
+                // console.log(selectedItem.id);
+                onChange(selectedItem.id);
+              }}
+              defaultButtonText={
+                _selected
+                  ? items.find(item => item.id === _selected)?.name
+                  : 'Select'
+              }
               buttonStyle={styles.dropdownBtnStyle}
               buttonTextStyle={styles.dropdownBtnTxtStyle}
               rowStyle={styles.dropdownRowStyle}
@@ -91,9 +85,6 @@ export const InputSelect: React.FC<InputSelectProps> = ({
           )}
         />
       </View>
-      {errorMessage ? (
-        <RegularText style={styles.fieldError} text={errorMessage} />
-      ) : null}
     </View>
   );
 };

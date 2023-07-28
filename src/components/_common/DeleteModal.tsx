@@ -1,13 +1,14 @@
 import { Modal, StyleSheet, View } from 'react-native';
 import { RegularText, TextButton } from '../_elements';
+import { colors, spacing } from '../../settings';
 
+import { DeleteItemParams } from '../../types';
 import { ScreenLayout } from './Screen.Layout';
-import { spacing } from '../../settings';
 
 interface DeleteModalProps {
   visible: boolean;
   setDeleteModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDelete: ({ cascade }: { cascade: boolean }) => void;
+  handleDelete: ({ cascade }: DeleteItemParams) => void;
   name?: string;
 }
 export const DeleteModal: React.FC<DeleteModalProps> = ({
@@ -29,25 +30,26 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
         setDeleteModalVisible(false);
       }}>
       <View style={styles.wrapper}>
-        <View style={styles.modalContent}></View>
-        {/* <ScreenLayout> */}
-        <RegularText
-          text={`Are you sure you want to delete activity ${name}?`}
-          style={undefined}
-        />
-        <TextButton
-          text={'Yes, delete'}
-          onPress={() => handleDeleteClick(false)}
-        />
-        <TextButton
-          text={'Yes, and delete references'}
-          onPress={() => handleDeleteClick(true)}
-        />
-        <TextButton
-          text={'No, keep'}
-          onPress={() => setDeleteModalVisible(false)}
-        />
-        {/* </ScreenLayout> */}
+        <View style={styles.modalContent}>
+          {/* <ScreenLayout> */}
+          <RegularText
+            text={`Are you sure you want to delete activity ${name}?`}
+            style={undefined}
+          />
+          <TextButton
+            text={'Yes, delete'}
+            onPress={() => handleDeleteClick(false)}
+          />
+          <TextButton
+            text={'Yes, and delete references'}
+            onPress={() => handleDeleteClick(true)}
+          />
+          <TextButton
+            text={'No, keep'}
+            onPress={() => setDeleteModalVisible(false)}
+          />
+          {/* </ScreenLayout> */}
+        </View>
       </View>
     </Modal>
   );
@@ -56,13 +58,18 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
   },
   modalContent: {
-    paddingHorizontal: spacing.$xl,
-    marginVertical: spacing.$xl,
+    boxShadow:
+      'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px', // marginHorizontal: spacing.$m,
+    // marginVertical: spacing.$m,
+    paddingHorizontal: spacing.$l,
+    paddingVertical: spacing.$l,
+    backgroundColor: colors.$plainWhite,
     alignSelf: 'center',
     justifyContent: 'center',
+    gap: spacing.$s,
   },
 });

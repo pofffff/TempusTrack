@@ -35,6 +35,14 @@ export interface CreateActivityInput {
   startTime?: Date;
 }
 
+export interface EditActivityInput {
+  categoryId?: string;
+  name?: string;
+  startDate?: Date;
+  endDate?: Date;
+  startTime?: Date;
+}
+
 export interface CreateTimeRecordInput {
   activityId?: string;
   amount?: number;

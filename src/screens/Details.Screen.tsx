@@ -1,5 +1,6 @@
 import {
   ActivityDataResult,
+  DeleteItemParams,
   DetailsScreenNavigationProp,
   TimeRecord,
 } from '../types';
@@ -13,6 +14,7 @@ import { StyleSheet, View } from 'react-native';
 import { useContext, useState } from 'react';
 
 import { ACTIVITY_DATA } from '../services/api';
+import { EditActivity } from '../components/EditActivity';
 import { NavigationContext } from '@react-navigation/native';
 import { nullFilter } from '../utils';
 import { useActivity } from '../hooks';
@@ -24,12 +26,16 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
   const navigation = useContext(NavigationContext);
   const { DeleteActivityMutation } = useActivity();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [_editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+
   const { data, error } = useQuery<ActivityDataResult>(ACTIVITY_DATA, {
     variables: { activityId: route.params.activityId },
   });
 
-  const handleDelete = ({ cascade }: { cascade: boolean }) => {
+  const activity = data?.activity;
+  if (!activity) return;
+
+  const handleDelete = ({ cascade }: DeleteItemParams) => {
     const input = { activityIds: [route.params.activityId], cascade };
     DeleteActivityMutation({
       variables: { input },
@@ -73,6 +79,20 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
       <View style={styles.timeRecordList}>{timeRecords()}</View>
       <View style={styles.activityActions}>
         <TextButton text={'Edit'} onPress={() => onEditClick()} />
+        {/* <Modal
+          transparent
+          visible={editModalVisible}
+          onRequestClose={() => {
+            setDeleteModalVisible(false);
+          }}>
+          <RegularText style={undefined} text={'Edit activity'} />
+          <InputText/>
+        </Modal> */}
+        <EditActivity
+          activity={activity}
+          visible={editModalVisible}
+          setModalVisible={setEditModalVisible}
+        />
         <TextButton text={'Delete activity'} onPress={onDeleteClick} />
         <DeleteModal
           visible={deleteModalVisible}
