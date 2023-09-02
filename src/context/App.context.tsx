@@ -1,11 +1,10 @@
 import { ApolloProvider } from '@apollo/client';
 import { AuthProvider } from './Auth.Context';
-import { JSXComponentProps } from '../types';
 import { NativeBaseProvider } from 'native-base';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getApolloClient } from '../services/apollo';
 
-interface AppProviderProps extends JSXComponentProps {
+interface AppProviderProps {
   children: React.ReactNode;
 }
 

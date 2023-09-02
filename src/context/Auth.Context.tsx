@@ -1,8 +1,4 @@
-import {
-  JSXComponentProps,
-  QueryLoginUserArgs,
-  QueryLoginUserPayload,
-} from '../types';
+import { QueryLoginUserArgs, QueryLoginUserPayload } from '../types';
 import { TOKEN_KEY, USER_ID_KEY } from '../settings';
 import {
   createContext,
@@ -36,58 +32,66 @@ export const AuthContext = createContext<AuthContextValue>(
   defaultAuthContextValue,
 );
 
-export const AuthProvider = memo(({ children }: JSXComponentProps) => {
-  const apolloClient = getApolloClient();
-  const { deleteValue, setValue } = useSecureStore();
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string | undefined>();
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
 
-  const [signInQuery, { data, error }] = useLazyQuery<
-    QueryLoginUserPayload,
-    QueryLoginUserArgs
-  >(SIGN_IN_USER);
+export const AuthProvider: React.FC<AuthProviderProps> = memo(
+  ({ children }) => {
+    const apolloClient = getApolloClient();
+    const { deleteValue, setValue } = useSecureStore();
+    const [authenticated, setAuthenticated] = useState<boolean>(false);
+    const [userId, setUserId] = useState<string | undefined>();
 
-  const signIn = (email: string, password: string) => {
-    signInQuery({
-      variables: {
-        input: { email, password },
-      },
-    });
-  };
+    const [signInQuery, { data, error }] = useLazyQuery<
+      QueryLoginUserPayload,
+      QueryLoginUserArgs
+    >(SIGN_IN_USER);
 
-  const signOut = async () => {
-    await deleteValue(TOKEN_KEY);
-    await apolloClient.resetStore();
-  };
+    const signIn = (email: string, password: string) => {
+      signInQuery({
+        variables: {
+          input: { email, password },
+        },
+      });
+    };
 
-  useEffect(() => {
-    if (data?.loginUser) {
-      setValue(TOKEN_KEY, data.loginUser.token);
-      setValue(USER_ID_KEY, data.loginUser.userId);
-      setAuthenticated(true);
-      setUserId(data.loginUser.userId);
-    }
+    const signOut = async () => {
+      await deleteValue(TOKEN_KEY);
+      await apolloClient.resetStore();
+    };
 
-    if (error) console.error(error);
-    // TODO: Display error from BE
-    console.error('SignIn error', { error });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error]);
+    useEffect(() => {
+      if (data?.loginUser) {
+        setValue(TOKEN_KEY, data.loginUser.token);
+        setValue(USER_ID_KEY, data.loginUser.userId);
+        setAuthenticated(true);
+        setUserId(data.loginUser.userId);
+      }
 
-  const memoedValue = useMemo(
-    () => ({
-      userId,
-      authenticated,
-      signIn,
-      signOut,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [userId, authenticated],
-  );
+      if (error) console.error(error);
+      // TODO: Display error from BE
+      console.error('SignIn error', { error });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, error]);
 
-  return (
-    <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>
-  );
-});
+    const memoedValue = useMemo(
+      () => ({
+        userId,
+        authenticated,
+        signIn,
+        signOut,
+      }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [userId, authenticated],
+    );
+
+    return (
+      <AuthContext.Provider value={memoedValue}>
+        {children}
+      </AuthContext.Provider>
+    );
+  },
+);
 
 export const useAuth = () => useContext(AuthContext);

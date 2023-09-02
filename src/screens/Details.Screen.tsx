@@ -78,7 +78,7 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
       {/* <View style={styles.container}> */}
       <View style={styles.timeRecordList}>{timeRecords()}</View>
       <View style={styles.activityActions}>
-        <TextButton text={'Edit'} onPress={() => onEditClick()} />
+        <TextButton fullWidth text={'Edit'} onPress={() => onEditClick()} />
         {/* <Modal
           transparent
           visible={editModalVisible}
@@ -88,19 +88,25 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
           <RegularText style={undefined} text={'Edit activity'} />
           <InputText/>
         </Modal> */}
-        <EditActivity
-          activity={activity}
-          visible={editModalVisible}
-          setModalVisible={setEditModalVisible}
-        />
-        <TextButton text={'Delete activity'} onPress={onDeleteClick} />
-        <DeleteModal
-          visible={deleteModalVisible}
-          setDeleteModalVisible={setDeleteModalVisible}
-          handleDelete={handleDelete}
-          name={data?.activity?.name}
+
+        <TextButton
+          fullWidth
+          text={'Delete activity'}
+          onPress={onDeleteClick}
         />
       </View>
+      <DeleteModal
+        visible={deleteModalVisible}
+        setDeleteModalVisible={setDeleteModalVisible}
+        handleDelete={handleDelete}
+        name={data?.activity?.name}
+        allReferencesOnly
+      />
+      <EditActivity
+        activity={activity}
+        visible={editModalVisible}
+        setModalVisible={setEditModalVisible}
+      />
       {/* </View> */}
     </ScreenLayout>
   );
@@ -122,6 +128,7 @@ const styles = StyleSheet.create({
     height: 'auto',
   },
   activityActions: {
+    gap: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

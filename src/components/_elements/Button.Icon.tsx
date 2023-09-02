@@ -1,12 +1,12 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { JSXComponentProps } from '../../types';
 import { spacing } from '../../settings';
 
-interface IconButtonProps extends JSXComponentProps {
+interface IconButtonProps {
   alignRight?: boolean;
   onPress(): void;
   style?: any;
+  children: React.ReactNode;
 }
 export const IconButton: React.FC<IconButtonProps> = ({
   alignRight,

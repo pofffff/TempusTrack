@@ -105,14 +105,17 @@ export type Mutation = {
   addActivitiesToCategory?: Maybe<Category>;
   createActivity?: Maybe<Activity>;
   createCategory?: Maybe<Category>;
+  createStreak?: Maybe<Streak>;
   createTimeRecord?: Maybe<TimeRecord>;
   createUser?: Maybe<CreateUserPayload>;
   deleteActivities?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
   deleteCategories?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
+  deleteStreaks?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
   deleteTimeRecords?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
   removeActivitiesFromCategory?: Maybe<Category>;
   updateActivity?: Maybe<Activity>;
   updateCategory?: Maybe<Category>;
+  updateStreak?: Maybe<Streak>;
   updateTimeRecord?: Maybe<TimeRecord>;
   updateUser?: Maybe<User>;
 };
@@ -131,6 +134,12 @@ export type MutationCreateActivityArgs = {
 
 export type MutationCreateCategoryArgs = {
   input: CategoryCreateInput;
+  userId: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateStreakArgs = {
+  input: StreakCreateInput;
   userId: Scalars['ID']['input'];
 };
 
@@ -156,6 +165,11 @@ export type MutationDeleteCategoriesArgs = {
 };
 
 
+export type MutationDeleteStreaksArgs = {
+  input: StrwakDeleteInput;
+};
+
+
 export type MutationDeleteTimeRecordsArgs = {
   input: TimeRecordDeleteInput;
 };
@@ -178,6 +192,12 @@ export type MutationUpdateCategoryArgs = {
 };
 
 
+export type MutationUpdateStreakArgs = {
+  input: StreakUpdateInput;
+  streakId: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateTimeRecordArgs = {
   input: TimeRecordUpdateInput;
   timeRecordId: Scalars['ID']['input'];
@@ -197,6 +217,8 @@ export type Query = {
   categoryCollection?: Maybe<CategoryCollection>;
   getUser?: Maybe<User>;
   loginUser: AuthPayload;
+  streak?: Maybe<Streak>;
+  streakCollection?: Maybe<StreakCollection>;
   timeRecord?: Maybe<TimeRecord>;
   timeRecordCollection?: Maybe<TimeRecordCollection>;
 };
@@ -232,6 +254,16 @@ export type QueryLoginUserArgs = {
 };
 
 
+export type QueryStreakArgs = {
+  streakId: Scalars['ID']['input'];
+};
+
+
+export type QueryStreakCollectionArgs = {
+  userId: Scalars['ID']['input'];
+};
+
+
 export type QueryTimeRecordArgs = {
   timeRecordId: Scalars['ID']['input'];
 };
@@ -239,6 +271,39 @@ export type QueryTimeRecordArgs = {
 
 export type QueryTimeRecordCollectionArgs = {
   activityId: Scalars['ID']['input'];
+};
+
+export type Streak = {
+  __typename?: 'Streak';
+  count: Scalars['Int']['output'];
+  endDate?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  owner: User;
+  startDate?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type StreakCollection = {
+  __typename?: 'StreakCollection';
+  streaks?: Maybe<Array<Maybe<Streak>>>;
+};
+
+export type StreakCreateInput = {
+  count?: InputMaybe<Scalars['Int']['input']>;
+  endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  name: Scalars['String']['input'];
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type StreakUpdateInput = {
+  count?: InputMaybe<Scalars['Int']['input']>;
+  endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type StrwakDeleteInput = {
+  streakIds: Array<Scalars['ID']['input']>;
 };
 
 export type TimeRecord = {

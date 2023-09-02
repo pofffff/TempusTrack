@@ -1,10 +1,11 @@
 import { StyleSheet, View } from 'react-native';
 import { colors, spacing } from '../../settings';
 
-import { JSXComponentProps } from '../../types';
 import { ScrollLayout } from './Scroll.Layout';
 
-interface ScreenLayoutProps extends JSXComponentProps {}
+interface ScreenLayoutProps {
+  children: React.ReactNode;
+}
 
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({ children }) => {
   return (

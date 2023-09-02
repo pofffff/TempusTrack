@@ -7,13 +7,11 @@ import {
   CategoryListItem,
   CreateActivity,
   CreateCategory,
-  Headline,
   ScreenLayout,
 } from '../components';
 import { StyleSheet, View } from 'react-native';
 
 import { CATEGORY_COLLECTION } from '../services/api';
-import { Text } from 'native-base';
 import { nullFilter } from '../utils';
 import { useAuth } from '../context';
 import { useQuery } from '@apollo/client';

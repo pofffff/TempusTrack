@@ -10,12 +10,14 @@ interface DeleteModalProps {
   setDeleteModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   handleDelete: ({ cascade }: DeleteItemParams) => void;
   name?: string;
+  allReferencesOnly?: boolean;
 }
 export const DeleteModal: React.FC<DeleteModalProps> = ({
   visible,
   setDeleteModalVisible,
   handleDelete,
   name,
+  allReferencesOnly,
 }) => {
   const handleDeleteClick = (cascade: boolean) => {
     handleDelete({ cascade });
@@ -33,17 +35,20 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
         <View style={styles.modalContent}>
           {/* <ScreenLayout> */}
           <RegularText
-            text={`Are you sure you want to delete activity ${name}?`}
+            text={`Are you sure you want to delete the activity ${name}?`}
             style={undefined}
           />
           <TextButton
             text={'Yes, delete'}
-            onPress={() => handleDeleteClick(false)}
+            onPress={() => handleDeleteClick(!!allReferencesOnly)}
           />
-          <TextButton
-            text={'Yes, and delete references'}
-            onPress={() => handleDeleteClick(true)}
-          />
+          {!allReferencesOnly && (
+            <TextButton
+              text={'Yes, and delete references'}
+              onPress={() => handleDeleteClick(true)}
+            />
+          )}
+
           <TextButton
             text={'No, keep'}
             onPress={() => setDeleteModalVisible(false)}

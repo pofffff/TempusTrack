@@ -1,7 +1,8 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
-import { JSXComponentProps } from '../../types'
+import { ScrollView, StyleSheet, View } from 'react-native';
 
-interface ScrollLayoutProps extends JSXComponentProps {}
+interface ScrollLayoutProps {
+  children: React.ReactNode;
+}
 
 export const ScrollLayout: React.FC<ScrollLayoutProps> = ({ children }) => {
   return (
@@ -13,12 +14,12 @@ export const ScrollLayout: React.FC<ScrollLayoutProps> = ({ children }) => {
         {children}
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
-    height: '100%'
-  }
-})
+    height: '100%',
+  },
+});

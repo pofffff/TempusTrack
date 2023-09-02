@@ -1,4 +1,5 @@
 import { Activity, Category, CreateTimeRecordInput } from '../types';
+import { Icon, IconButton, RegularText } from './_elements';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { USER_ID_KEY, colors, font, fontSize, spacing } from '../settings';
 import { memo, useContext, useEffect, useState } from 'react';
@@ -8,7 +9,6 @@ import { ActivityListItem } from './ActivityListItem';
 import { ActivityModal } from './ActivityModal';
 import { CATEGORY_COLLECTION } from '../services/api';
 import { NavigationContext } from '@react-navigation/native';
-import { RegularText } from './_elements';
 import { nullFilter } from '../utils';
 import { useAuth } from '../context';
 import { useForm } from 'react-hook-form';
@@ -25,6 +25,7 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
     const [categoryVisible, setCategoryVisible] = useState<boolean>(false);
     const [activityId, setActivityId] = useState<string | null>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
 
     const {
       CreateTimeRecordMutation,
@@ -85,6 +86,10 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = memo(
       navigation?.navigate('Activity details', { activityId });
     };
 
+    const handleEditClick = () => {
+      setEditModalVisible(true);
+    };
+
     return (
       category && (
         <View>
@@ -129,6 +134,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     color: colors.$light,
     height: 46,
+    // flex: 1,
+    // justifyContent: 'space-between',
   },
   categoryName: {
     fontSize: fontSize.$s,

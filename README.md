@@ -37,6 +37,13 @@ Make sure to use the correct java version
 - `npm install`
 - `npx react-native run-android`
 
+## Build APK
+
+`npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res`
+
+Release requires approval from google play store, therefor create debug apk for now
+`cd android && ./gradlew assembleDebug`
+
 ## Backend
 
 ### https://choresbackend.herokuapp.com/
